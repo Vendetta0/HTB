@@ -191,7 +191,7 @@ Now let's ssh to the victim machine and get user :wink:
 
 ![PaulSSH](https://user-images.githubusercontent.com/8396956/161560326-21f5f1df-721e-4927-b6b3-75ad526bcd5c.png)
 
-##privilege escalation (Root)
+## Privilege Escalation (Root)
 
 Trying to download `linpeas.sh` on the machine
 
@@ -207,7 +207,7 @@ Here is result of **linpeas**
 
 we find the sudo version is `1.8.31` 
 
-Searching for exploit and found [CVE-2021-3156] (https://github.com/blasty/CVE-2021-3156)
+Searching for exploit and found [CVE-2021-3156](https://github.com/blasty/CVE-2021-3156)
 
 copying the exploit to the victim machine with `scp` 
 
