@@ -84,9 +84,11 @@ From the result we find `ConsoleHost_History.txt`
 
 ![winpeas](https://user-images.githubusercontent.com/8396956/163712784-531ca871-1a08-4f23-995d-37397a08add6.png)
 
-Now we got the `svc_deploy` password
+Let's get the content of the file 
 
 ![svcPW](https://user-images.githubusercontent.com/8396956/163713074-88b4b439-38d4-4193-aeb4-977aa729a01d.png)
+
+Nice we got svc_deploy user 
 
 ![svc_](https://user-images.githubusercontent.com/8396956/163713206-25614095-ab1f-41da-90c6-ec86095a3cd6.png)
 
