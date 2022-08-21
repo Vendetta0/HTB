@@ -86,5 +86,31 @@ We got /etc/passwd
 Users (gbyolo, developer) 
 
 
+I tried to get content of some pages , started with config.php , db_config.php but got nothing 
+
+then i tried `db_connect.php` and yes it exists 
+
+![db_connect](https://user-images.githubusercontent.com/8396956/185800489-92f27383-a63f-42d2-a25c-531192536b43.png)
+
+Let's try this password for ssh 
+
+## FootHold
+
+![ssh_gbyolo](https://user-images.githubusercontent.com/8396956/185800607-ba78811d-8bd4-45b2-bf08-584c497fac8e.png)
+
+## PE
+
+let's try the first thing we do for PE :D 
+
+`sudo -l` 
+
+![PE1](https://user-images.githubusercontent.com/8396956/185800954-84fc2581-95f5-4da1-a3b4-b6ea63a21028.png)
+
+We see we can run `/usr/local/bin/meta-git` as developer 
+
+
+![PE2](https://user-images.githubusercontent.com/8396956/185801019-1cb49259-ff76-421a-83ee-ae829f213be0.png)
+
+
 
 
